@@ -1,0 +1,76 @@
+/* Estilo geral do contêiner de adicionar livros */
+.add-book-container {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--light-pink);
+  padding: 20px;
+  margin-top: 110px;
+  margin-bottom: 5rem;
+}
+.add-book-container1 {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--light-pink);
+  padding: 20px;
+  margin-top: 5px;
+  margin-bottom: 5rem;
+}
+
+/* Estilo do título da página */
+.add-book-container h1 {
+  color: var(--purple);
+  font-size: 28px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Estilo do formulário de adicionar livro */
+.add-book-container form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: var(--white);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo dos grupos de entrada do formulário */
+.input-group {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  color: var(--purple);
+  font-size: 16px;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid var(--gray);
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+/* Estilo do botão de cadastrar livro */
+.add-book-button {
+  background-color: var(--yellow-burnt);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.add-book-button:hover {
+  background-color: var(--yellow-dark);
+}

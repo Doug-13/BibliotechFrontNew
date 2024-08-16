@@ -1,0 +1,24 @@
+/* Estilo do header da página de login */
+.login-header {
+    background-color: var(--purple);
+    padding: 10px;
+    text-align: center;
+    color: white;
+    margin-top: -10rem;
+    border-radius: 2rem;
+  }
+  
+  /* Estilo do footer da página de login */
+  .login-footer {
+    background-color: var(--purple);
+    padding: 10px;
+    text-align: center;
+    color: white;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    box-sizing: border-box;
+    margin-left: -32rem;
+    margin-bottom: -1rem;
+}
+  

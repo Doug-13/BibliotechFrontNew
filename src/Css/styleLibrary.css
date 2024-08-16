@@ -1,0 +1,67 @@
+/* Container principal da biblioteca pessoal */
+.personal-library-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: var(--pink-light);
+  margin-bottom: -1rem;
+  margin-top: 20px;
+  margin-left: -5rem;
+}
+
+/* Título da biblioteca */
+.personal-library-container h1 {
+  color: var(--purple);
+  margin-bottom: 30px;
+  font-size: 2rem;
+}
+
+/* Lista de livros */
+.book-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  max-width: 1000px;
+}
+
+/* Item de livro individual */
+.book-item {
+  background-color: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 200px;
+  transition: transform 0.2s ease-in-out;
+  align-items: center;
+  padding-inline: 2rem;
+}
+
+/* Efeito hover no item de livro */
+.book-item:hover {
+  transform: translateY(-5px);
+}
+
+/* Título do livro */
+.book-item h3 {
+  color: var(--purple);
+  margin-bottom: 10px;
+}
+
+/* Autor do livro */
+.book-item p {
+  margin: 5px 0;
+  color: var(--purple-dark);
+}
+
+/* Status do livro */
+.book-item p:last-of-type {
+  font-weight: bold;
+}
+
+/* Ajuste para o botão de voltar */
+.personal-library-container button {
+  margin-top: 20px;
+}

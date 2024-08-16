@@ -1,0 +1,17 @@
+/* Barra decorativa no lado direito */
+.decorative-bar {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 60px; /* Largura da barra */
+    height: 100vh; /* Altura total da tela */
+    background-color: var(--purple); /* Cor roxa igual à do menu */
+    z-index: 1; /* Garantir que a barra esteja atrás dos outros elementos */
+    
+  }
+  
+  /* Adicionar padding para evitar que o conteúdo fique sob a barra */
+  .content-with-bar {
+    padding-right: 20px; /* Espaço adicional para acomodar a barra */
+  }
+  

@@ -1,0 +1,55 @@
+/* Estilos para o Footer */
+.site-footer {
+    background-color: var(--purple);
+    color: #fff;
+    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    width: 100%; /* Ocupa toda a largura da tela */
+  }
+  
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    height: 20vh;
+    width: 90vw; /* Garantir que o body ocupe toda a largura da tela */
+  }
+  
+  .footer-section {
+    flex: 1;
+    margin: 0 20px;
+  }
+  
+  .footer-section h4 {
+    margin-bottom: 10px;
+    color: var(--yellow-burnt);
+  }
+  
+  .footer-section p,
+  .footer-section a {
+    color: #fff;
+    text-decoration: none;
+    margin-bottom: 5px;
+    display: block;
+  }
+  
+  .footer-section a:hover {
+    text-decoration: underline;
+  }
+  
+  .social-icons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .social-icons a {
+    color: var(--yellow-burnt);
+    font-size: 18px;
+  }
+  
+  .social-icons a:hover {
+    color: #fff;
+  }
+  
