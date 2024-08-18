@@ -143,6 +143,36 @@
 .carousel-button.next {
   right: 10px;
 }
+.featured-books {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px;
+}
+
+.featured-books h2 {
+  margin-bottom: 20px;
+}
+
+.carousel-container {
+  width: 100%;
+  max-width: 1200px; /* Ajuste o valor conforme necessário */
+  overflow: hidden;
+}
+
+.carousel-container img {
+  width: 100%;
+  height: auto;
+  object-fit: cover; /* Para garantir que a imagem se ajuste ao contêiner */
+  max-width: 150px; /* Ajuste o valor para diminuir o tamanho das imagens */
+  max-height: 200px; /* Ajuste o valor para controlar a altura máxima */
+}
+
+.carousel-track {
+  display: flex;
+  gap: 10px; /* Ajuste o valor conforme necessário */
+}
 
 /* Media Queries para telas pequenas */
 @media (max-width: 600px) {

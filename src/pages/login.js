@@ -1,71 +1,102 @@
-import '../Css/styleLogin.css';
-import LoginHeader from '../components/HeaderLogin';
-import LoginFooter from '../components/FooterLogin';
-import DecorativeBar from '../components/Perfumaria';
-
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-//Importa o recurso para criar link do react
-import {Link} from 'react-router-dom';
-
-// import '../CSS/login.css'; // Importando o arquivo CSS
-
-//Utilizado para armazenar o token no localStorage ou sessionStorage após o login
+import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../authentication/Authentication';
+import { Container, TextField, Button, Typography, Box, Link as MuiLink, IconButton, InputAdornment } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 const Login = () => {
-  console.log('login');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [token, setToken] = useState('');
-    console.log('antes');
+    const [showPassword, setShowPassword] = useState(false);
     const { setAuthToken } = useContext(AuthContext);
-    console.log('depois');
     const navigate = useNavigate();
 
-     const login = async () => {
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+    
+    const login = async () => {
         try {
             const response = await axios.post('http://localhost:3002/api/users/login', { email, password });
             setAuthToken(response.data.token);
-            //localStorage.setItem('token', response.data.token); // Armazena o token
-            setToken(response.data.token);
-            navigate('/Home'); // Redireciona para a página interna
+            navigate('/Home');
         } catch (error) {
             alert('Erro no login: ' + error.response.data);
         }
     };
+
     return (
-        <div className="login-container">
-            <div className="login-box">
+        <Container maxWidth="xs" sx={{ mt: 8 }}>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    bgcolor: 'background.paper',
+                    p: 3,
+                    borderRadius: 2,
+                    boxShadow: 3,
+                }}
+            >
+                {/* Logo Section */}
+                <img src="./Assets/Logo.png" alt="Logo" style={{ width: '50%', maxWidth: '200px', marginBottom: '20px',borderRadius: '6rem' }} />
                 
-                <h1>Login</h1>
-                <div className="input-container">
-                    <input 
-                        type="email" 
-                        placeholder="E-mail do usuario" 
-                        value={email} 
-                        onChange={(e) => setEmail(e.target.value)} 
-                    />
-                </div>
-                <br></br>
-                <div className="input-container">
-                    <input 
-                        type="password" 
-                        placeholder="Senha" 
-                        value={password} 
-                        onChange={(e) => setPassword(e.target.value)} 
-                    />
-                </div>
-                <br></br>
-                <Link to="/esqueci-minha-senha">Esqueceu a senha?</Link>
-                <div className="button-container">
-                    <button onClick={login} className="button">Login</button>
-                </div>
-                <br></br>
-                <Link to="/Registro">Acessar cadastro</Link>
-            </div>
-        </div>
+                <Typography component="h1" variant="h5">
+                    Login
+                </Typography>
+                <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="email"
+                    label="E-mail do usuário"
+                    name="email"
+                    autoComplete="email"
+                    autoFocus
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                />
+                <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Senha"
+                    type={showPassword ? 'text' : 'password'}
+                    id="password"
+                    autoComplete="current-password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={handleClickShowPassword}
+                                    edge="end"
+                                >
+                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
+                />
+                <MuiLink component={Link} to="/esqueci-minha-senha" variant="body2" sx={{ mt: 1, mb: 1 }}>
+                    Esqueceu a senha?
+                </MuiLink>
+                <Button
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                    onClick={login}
+                >
+                    Login
+                </Button>
+                <MuiLink component={Link} to="/Registro" variant="body2">
+                    Acessar cadastro
+                </MuiLink>
+            </Box>
+        </Container>
     );
 };
+
 export default Login;

@@ -1,104 +1,96 @@
+/* Estilo do Overlay */
 .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); /* Um pouco mais escuro para melhor contraste */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Estilo do Conteúdo do Modal */
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  position: relative;
+  width: 90%;
+  max-width: 600px; /* Ajuste para uma largura maior */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Sombra mais pronunciada */
+  overflow: hidden; /* Para evitar overflow de conteúdo */
+}
+
+/* Estilo do Botão de Fechar */
+.modal-close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #333;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.modal-close-button:hover {
+  color: #d9534f; /* Cor de destaque no hover */
+}
+
+/* Estilo do Corpo do Modal */
+.modal-body {
+  margin-top: 20px;
+}
+
+/* Estilo das Ações do Modal */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* Estilo dos Botões de Ação */
+.modal-actions button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.modal-actions button:first-child {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.modal-actions button:first-child:hover {
+  background-color: #e0e0e0;
+}
+
+.modal-actions button:last-child {
+  background-color: #d9534f;
+  color: white;
+}
+
+.modal-actions button:last-child:hover {
+  background-color: #c9302c;
+}
+
+/* Animação de Fade In */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
   }
-  
-  .modal-content {
-    background: white;
-    padding: 20px;
-    border-radius: 5px;
-    width: 400px;
-    max-width: 80%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    animation: fadeIn 0.3s ease;
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
-  
-  .modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
-  }
-  
-  .modal-actions button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  .modal-actions button:first-child {
-    background-color: #f0f0f0;
-    color: #333;
-  }
-  
-  .modal-actions button:last-child {
-    background-color: #d9534f;
-    color: white;
-  }
-  
-  .modal-actions button:hover {
-    opacity: 0.9;
-  }
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .modal-content {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    position: relative;
-    height: 400px;
-    width: 600px;
-    max-width: 80%;
-  }
-  
-  .modal-close-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-  }
-  
-  .modal-body {
-    margin-top: 20px;
-  }
-  
-  .modal-actions {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-  }
-  
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: scale(0.9);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
+}

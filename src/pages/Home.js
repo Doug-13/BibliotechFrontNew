@@ -1,139 +1,298 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from 'react';
 import "../Css/styleHome.css";
-import Header from "../components/Header";
 import Footer from "../components/Footer";
-import Menu from "../components/Menu";
-import Modal from "../components/modalHome"; // Certifique-se de que o caminho está correto
+import Modal from "../components/modalHome";
+import ModalEdit from '../components/modalEdit';
+import ModalEmprestimo from '../components/modalEmprestimo';
+import ModalShare from '../components/modalShare'; // Importando o novo modal
+import ImageList from '@mui/material/ImageList';
+import ImageListItem from '@mui/material/ImageListItem';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Avatar from '@mui/material/Avatar';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import AddIcon from '@mui/icons-material/Add';
+import ShareIcon from '@mui/icons-material/Share';
+import Tooltip from '@mui/material/Tooltip';
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
   const [books, setBooks] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalState, setModalState] = useState({ open: false, type: null });
   const [selectedBook, setSelectedBook] = useState(null);
-  const userId = 'user456'; // Substitua com a lógica para obter o ID do usuário
-  const [scrollIndex, setScrollIndex] = useState(0);
-  const carouselRef = useRef(null);
-  const itemsToShow = 8;
+  const [anchorEl, setAnchorEl] = useState(null); // For controlling the dropdown menu
+  const [shareModalOpen, setShareModalOpen] = useState(false); // State to manage share modal visibility
+  const userId = 'user456'; // Replace with logic to get the user ID
+  const navigate = useNavigate(); // Set up navigation
 
   useEffect(() => {
-    console.log('useEffect rodando'); // Verifique se o useEffect está sendo executado
-
-    // Fazendo a chamada para o backend
     fetch(`http://localhost:3002/api/books/user/${userId}`)
       .then(response => {
         if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+          throw new Error(`Erro HTTP! Status: ${response.status}`);
         }
         return response.json();
       })
       .then(data => {
-        console.log('Dados recebidos do backend:', data); // Verifique os dados recebidos
-
-        if (data.length === 0) {
-          console.warn('Nenhum livro retornado para este usuário.');
-        }
-
-        // Filtra livros públicos
-        const publicBooks = data.filter(book => book.visibility === 'public');
-        
-        // Verifica se existem livros públicos após o filtro
-        if (publicBooks.length === 0) {
-          console.warn('Nenhum livro público disponível.');
-        }
-
+        const publicBooks = data.filter(book => book.visibility === 'Publico');
         setBooks(publicBooks);
       })
       .catch(error => console.error('Erro ao buscar os livros:', error));
   }, [userId]);
 
-  const handlePrevClick = () => {
-    setScrollIndex(prevIndex => Math.max(prevIndex - 1, 0));
-  };
-
-  const handleNextClick = () => {
-    setScrollIndex(prevIndex => Math.min(prevIndex + 1, Math.ceil(books.length / itemsToShow) - 1));
-  };
-
-  useEffect(() => {
-    if (carouselRef.current) {
-      carouselRef.current.style.transform = `translateX(-${scrollIndex * (100 / itemsToShow)}%)`;
-    }
-  }, [scrollIndex, books]);
-
   const handleBookClick = (book) => {
-    console.log('Livro clicado:', book); // Log para verificar o livro clicado
     setSelectedBook(book);
-    setIsModalOpen(true);
+    setModalState({ open: true, type: 'view' });
   };
 
   const closeModal = () => {
-    console.log('Fechando modal'); // Log para verificar o fechamento do modal
-    setIsModalOpen(false);
+    setModalState({ open: false, type: null });
     setSelectedBook(null);
   };
 
-  const confirmAction = () => {
-    console.log('Ação confirmada para o livro:', selectedBook);
-    // Adicione aqui a lógica para confirmar a ação, como realizar o empréstimo.
-    closeModal(); // Fecha o modal após a ação
+  const openEditModal = () => {
+    setModalState({ open: true, type: 'edit' });
   };
+
+  const openEmprestimoModal = () => {
+    setModalState({ open: true, type: 'emprestimo' });
+  };
+
+  const handleSave = (updatedBook) => {
+    console.log('Livro atualizado:', updatedBook);
+    closeModal();
+  };
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleAddBookClick = () => {
+    navigate('/pages/AddBook'); 
+  };
+
+  const handleShareLibraryClick = () => {
+    setShareModalOpen(true);
+  };
+
+  const handleShareModalClose = () => {
+    setShareModalOpen(false);
+  };
+
+  // Assume your library URL is this:
+  const libraryUrl = 'http://localhost:3000'; // Replace with actual library URL
 
   return (
     <div className="home-container">
-      <Header />
-      <div>
-        <Menu />
-        <main className="main-content">
-          <section className="intro">
-            <h2>Bem-vindo à nossa Biblioteca Online!</h2>
-            <p>
-              Aqui você pode explorar uma vasta coleção de livros, reservar seus
-              favoritos e acompanhar seus empréstimos.
-            </p>
-            <button className="explore-button">Explorar Livros</button>
-          </section>
-
-          <section className="featured-books">
-            <h2>Seus livros</h2>
-            <div className="carousel-container">
-              <button className="carousel-button prev" onClick={handlePrevClick}>‹</button>
-              <div className="carousel-track" ref={carouselRef}>
-                {books.length === 0 ? (
-                  <p>Nenhum livro público disponível.</p>
-                ) : (
-                  books.map(book => (
-                    <div 
-                      key={book.id} 
-                      className="carousel-item"
-                      onClick={() => handleBookClick(book)}
-                    >
-                      <img src={book.imageUrl} alt={book.title} />
-                      <h3>{book.title}</h3>
-                      <p>{book.author}</p>
-                    </div>
-                  ))
-                )}
-              </div>
-              <button className="carousel-button next" onClick={handleNextClick}>›</button>
-            </div>
-          </section>
-        </main>
-      </div>
-      <Footer />
-      
-      <Modal 
-        show={isModalOpen} 
-        handleClose={closeModal} 
-        handleConfirm={confirmAction} 
-        title={selectedBook ? selectedBook.title : ''}
+      <AppBar position="fixed">
+        <Toolbar>
+          <img
+            src="./Assets/Logo.png"
+            alt="Logo"
+            style={{ height: '100px', marginRight: '20px' }}
+          />
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            onClick={handleMenuOpen}
+            sx={{ fontSize: '2rem' }}
+          >
+            <MenuIcon sx={{ fontSize: '2.5rem' }} />
+          </IconButton>
+          <Typography variant="h4" sx={{ flexGrow: 1 }}>
+            Minha Biblioteca
+          </Typography>
+          <Avatar
+            alt="Nome do Usuário"
+            src="./Assets/avatar.jpg"
+            sx={{
+              marginLeft: '120px',
+              width: '100px',
+              height: '100px'
+            }}
+          />
+        </Toolbar>
+      </AppBar>
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleMenuClose}
       >
-        {selectedBook && (
-          <div>
-            <p>Autor: {selectedBook.author}</p>
-            <p>Descrição: {selectedBook.description}</p>
-            {/* Adicione mais detalhes do livro aqui conforme necessário */}
+        <MenuItem onClick={handleMenuClose}>Perfil</MenuItem>
+        <MenuItem onClick={handleMenuClose}>Comunidades</MenuItem>
+        <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+      </Menu>
+      <main className="main-content">
+        <section className="featured-books">
+          <Typography variant="h4" component="h2" sx={{ marginBottom: '20px', textAlign: 'center' }}>
+            Meus Livros
+          </Typography>
+          <div className="button-container" style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+            <Tooltip title="Adicionar Livro">
+              <IconButton
+                color="inherit"
+                onClick={handleAddBookClick}
+                sx={{ fontSize: '2.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+              >
+                <AddIcon sx={{ fontSize: '2.5rem' }} />
+                <Typography variant="caption" sx={{ marginTop: '5px' }}>Adicionar Livro</Typography>
+                
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Compartilhar Biblioteca">
+              <IconButton
+                color="inherit"
+                onClick={handleShareLibraryClick}
+                sx={{ fontSize: '2.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+              >
+                <ShareIcon sx={{ fontSize: '2.5rem' }} />
+                <Typography variant="caption" sx={{ marginTop: '5px' }}>Compartilhar Biblioteca</Typography>
+              </IconButton>
+            </Tooltip>
           </div>
-        )}
-      </Modal>
+          <FormControl>
+            <RadioGroup
+              row
+              aria-labelledby="demo-row-radio-buttons-group-label"
+              name="row-radio-buttons-group"
+            >
+              <FormControlLabel value="allbooks" control={<Radio />} label="Todos os Livros" />
+              <FormControlLabel value="lidos" control={<Radio />} label="Lidos" />
+              <FormControlLabel value="naolidos" control={<Radio />} label="Não Lidos" />
+              <FormControlLabel value="emprestados" control={<Radio />} label="Emprestados" />
+              <FormControlLabel value="privados" control={<Radio />} label="Privados" />
+            </RadioGroup>
+          </FormControl>
+
+          <div className="carousel-container">
+            <ImageList
+              sx={{
+                width: '100%',
+                height: 'auto',
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '20px',
+                justifyContent: 'center',
+              }}
+              cols={4}
+              rowHeight="auto"
+            >
+              {books.length === 0 ? (
+                <Typography variant="body1" sx={{ textAlign: 'center', width: '150%' }}>
+                  Nenhum livro público disponível.
+                </Typography>
+              ) : (
+                books.map((book) => (
+                  <ImageListItem
+                    key={book.id}
+                    sx={{
+                      width: 'calc(20% - 20px)', // Adjust item width
+                      borderRadius: '10px',
+                      marginTop: '3rem',
+                      overflow: 'hidden',
+                      boxShadow: 3,
+                      transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+                      '&:hover': {
+                        transform: 'scale(1.05)',
+                        boxShadow: 6,
+                      },
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                    }}
+                    onClick={() => handleBookClick(book)}
+                  >
+                    <img
+                      src={book.imageUrl}
+                      alt={book.title}
+                      style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
+                      loading="lazy"
+                    />
+                    <div
+                      style={{
+                        textAlign: 'center',
+                        marginTop: '10px',
+                      }}
+                    >
+                      <Typography variant="h6" component="p" style={{ color: 'black' }}>
+                        {book.title}
+                      </Typography>
+                      <Typography variant="body2" component="p" style={{ color: 'gray' }}>
+                        by {book.author}
+                      </Typography>
+                    </div>
+                  </ImageListItem>
+                ))
+              )}
+            </ImageList>
+          </div>
+        </section>
+      </main>
+      <Footer />
+      <Modal
+        show={modalState.open && modalState.type === 'view'}
+        handleClose={closeModal}
+        handleConfirm={openEditModal}
+        handleEmprestimo={openEmprestimoModal}
+        title={selectedBook ? selectedBook.title : ''}
+        author={selectedBook ? selectedBook.author : ''}
+        isbn={selectedBook ? selectedBook.isbn : ''}
+        publisher={selectedBook ? selectedBook.publisher : ''}
+        publishDate={selectedBook ? selectedBook.publishDate : ''}
+        genre={selectedBook ? selectedBook.genre : ''}
+        description={selectedBook ? selectedBook.description : ''}
+        status={selectedBook ? selectedBook.status : ''}
+        visibility={selectedBook ? selectedBook.visibility : ''}
+        imageUrl={selectedBook ? selectedBook.imageUrl : ''}
+      />
+      <ModalEdit
+        show={modalState.open && modalState.type === 'edit'}
+        handleClose={closeModal}
+        handleConfirm={handleSave}
+        title={selectedBook ? selectedBook.title : ''}
+        author={selectedBook ? selectedBook.author : ''}
+        isbn={selectedBook ? selectedBook.isbn : ''}
+        publisher={selectedBook ? selectedBook.publisher : ''}
+        publishDate={selectedBook ? selectedBook.publishDate : ''}
+        genre={selectedBook ? selectedBook.genre : ''}
+        description={selectedBook ? selectedBook.description : ''}
+        status={selectedBook ? selectedBook.status : ''}
+        visibility={selectedBook ? selectedBook.visibility : ''}
+        imageUrl={selectedBook ? selectedBook.imageUrl : ''}
+      />
+      <ModalEmprestimo
+        show={modalState.open && modalState.type === 'emprestimo'}
+        handleClose={closeModal}
+        handleConfirm={handleSave}
+        title={selectedBook ? selectedBook.title : ''}
+        author={selectedBook ? selectedBook.author : ''}
+        isbn={selectedBook ? selectedBook.isbn : ''}
+        publisher={selectedBook ? selectedBook.publisher : ''}
+        publishDate={selectedBook ? selectedBook.publishDate : ''}
+        genre={selectedBook ? selectedBook.genre : ''}
+        description={selectedBook ? selectedBook.description : ''}
+        status={selectedBook ? selectedBook.status : ''}
+        visibility={selectedBook ? selectedBook.visibility : ''}
+        imageUrl={selectedBook ? selectedBook.imageUrl : ''}
+      />
+      <ModalShare
+        show={shareModalOpen}
+        handleClose={handleShareModalClose}
+        shareUrl={libraryUrl}
+      />
     </div>
   );
 }
