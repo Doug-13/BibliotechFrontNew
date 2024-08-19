@@ -1,0 +1,15 @@
+.modal-box {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* Adds spacing between each box */
+}
+
+.modal-box > div {
+  display: flex;
+  align-items: center;
+  padding: 8px0; /* Adds padding for vertical spacing */
+}
+
+.modal-boximg {
+  margin-right: 20px;
+}

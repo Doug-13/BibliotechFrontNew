@@ -74,3 +74,16 @@
 .add-book-button:hover {
   background-color: var(--yellow-dark);
 }
+
+.input-group-description {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.input-group-description textarea {
+  width: 100%;
+  box-sizing: border-box; /* Inclui padding e border no cálculo da largura total */
+  resize: vertical; /* Permite redimensionar verticalmente */
+  height: 7rem;
+}
