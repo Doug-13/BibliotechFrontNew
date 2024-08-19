@@ -169,7 +169,7 @@ function AddBook() {
 
     try {
       console.log(newBook)
-      await axios.post('http://localhost:3002/api/books/add', newBook);
+      await axios.post('http://localhost:3002/api/books/book', newBook);
       setSuccessMessage("Livro cadastrado com sucesso!");
       clearForm();
     } catch (error) {

@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 import Modal from "../components/modalHome";
 import ModalEdit from '../components/modalEdit';
 import ModalEmprestimo from '../components/modalEmprestimo';
-import ModalShare from '../components/modalShare'; // Importando o novo modal
+import ModalShare from '../components/modalShare';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import AppBar from '@mui/material/AppBar';
@@ -26,12 +26,16 @@ import { useNavigate } from 'react-router-dom';
 
 function Home() {
   const [books, setBooks] = useState([]);
+  const [filter, setFilter] = useState('allbooks');
   const [modalState, setModalState] = useState({ open: false, type: null });
   const [selectedBook, setSelectedBook] = useState(null);
-  const [anchorEl, setAnchorEl] = useState(null); // For controlling the dropdown menu
-  const [shareModalOpen, setShareModalOpen] = useState(false); // State to manage share modal visibility
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
   const userId = 'user456'; // Replace with logic to get the user ID
-  const navigate = useNavigate(); // Set up navigation
+  const navigate = useNavigate();
+  
+  // Define libraryUrl
+  const libraryUrl = `http://localhost:3002/api/users/${userId}/library`;
 
   useEffect(() => {
     fetch(`http://localhost:3002/api/books/user/${userId}`)
@@ -47,6 +51,10 @@ function Home() {
       })
       .catch(error => console.error('Erro ao buscar os livros:', error));
   }, [userId]);
+
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value);
+  };
 
   const handleBookClick = (book) => {
     setSelectedBook(book);
@@ -82,6 +90,9 @@ function Home() {
   const handleAddBookClick = () => {
     navigate('/pages/AddBook'); 
   };
+  const handleOpenProfile = () => {
+    navigate('/Profile'); 
+  };
 
   const handleShareLibraryClick = () => {
     setShareModalOpen(true);
@@ -90,9 +101,36 @@ function Home() {
   const handleShareModalClose = () => {
     setShareModalOpen(false);
   };
+// Filtragem dos livros
+const filteredBooks = books.filter(book => {
+  // Normalizar valores para comparação
+  const normalizedStatus = book.status ? book.status.toLowerCase() : '';
+  const normalizedVisibility = book.visibility ? book.visibility.toLowerCase() : '';
 
-  // Assume your library URL is this:
-  const libraryUrl = 'http://localhost:3000'; // Replace with actual library URL
+  console.log(`Filtrando livro: ${book.title}, Status: ${normalizedStatus}, Visibilidade: ${normalizedVisibility}`);
+
+  switch (filter) {
+    case 'allbooks':
+      return true; // Mostrar todos os livros
+
+    case 'lidos':
+      return normalizedStatus === 'lido'; // Mostrar livros lidos
+
+    case 'naolidos':
+      return normalizedStatus === 'não lido'; // Mostrar livros não lidos
+
+    case 'emprestados':
+      return normalizedStatus === 'emprestado'; // Mostrar livros emprestados
+
+    case 'privados':
+      return normalizedVisibility === 'privado'; // Mostrar livros privados
+
+    default:
+      return false; // Filtros desconhecidos
+  }
+});
+
+
 
   return (
     <div className="home-container">
@@ -131,7 +169,7 @@ function Home() {
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
       >
-        <MenuItem onClick={handleMenuClose}>Perfil</MenuItem>
+        <MenuItem onClick={handleOpenProfile}>Perfil</MenuItem>
         <MenuItem onClick={handleMenuClose}>Comunidades</MenuItem>
         <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
       </Menu>
@@ -149,7 +187,6 @@ function Home() {
               >
                 <AddIcon sx={{ fontSize: '2.5rem' }} />
                 <Typography variant="caption" sx={{ marginTop: '5px' }}>Adicionar Livro</Typography>
-                
               </IconButton>
             </Tooltip>
             <Tooltip title="Compartilhar Biblioteca">
@@ -168,6 +205,8 @@ function Home() {
               row
               aria-labelledby="demo-row-radio-buttons-group-label"
               name="row-radio-buttons-group"
+              value={filter}
+              onChange={handleFilterChange}
             >
               <FormControlLabel value="allbooks" control={<Radio />} label="Todos os Livros" />
               <FormControlLabel value="lidos" control={<Radio />} label="Lidos" />
@@ -190,12 +229,12 @@ function Home() {
               cols={4}
               rowHeight="auto"
             >
-              {books.length === 0 ? (
+              {filteredBooks.length === 0 ? (
                 <Typography variant="body1" sx={{ textAlign: 'center', width: '150%' }}>
-                  Nenhum livro público disponível.
+                  Nenhum livro disponível.
                 </Typography>
               ) : (
-                books.map((book) => (
+                filteredBooks.map((book) => (
                   <ImageListItem
                     key={book.id}
                     sx={{
