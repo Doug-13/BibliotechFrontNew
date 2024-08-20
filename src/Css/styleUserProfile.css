@@ -8,3 +8,19 @@
     border-radius: 5px;
     transition: background-color 0.3s ease;
   }
+  /* styleUserProfile.css */
+.button-back {
+  background-color: #1976d2; /* cor do botão primário do Material-UI */
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.button-back:hover {
+  background-color: #115293; /* tom mais escuro para hover */
+}
