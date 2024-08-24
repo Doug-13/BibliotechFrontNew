@@ -20,6 +20,7 @@ function Menu() {
            <li className="menu-item"><Link to="/Home" onClick={toggleMenu}>Início</Link></li>
           <li className="menu-item"><Link to="/community" onClick={toggleMenu}>Comunidade</Link></li>
           <li className="menu-item"><Link to="/AddBook" onClick={toggleMenu}>Cadastrar Livros</Link></li>
+          <li className="menu-item"><Link to="/Profile" onClick={toggleMenu}>Perfil</Link></li>
           {/* <!-- Adicionar outros links conforme novas seções forem criadas --> */}
         </ul>
       </nav>
