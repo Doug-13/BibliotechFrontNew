@@ -78,3 +78,5 @@ git add .
 git commit -m "mensagem"
 git push -u origin main
 git status, conferir se ficou ok
+
+git

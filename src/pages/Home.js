@@ -33,23 +33,22 @@ function Home() {
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const userId = 'user456'; // Replace with logic to get the user ID
   const navigate = useNavigate();
-  
+
   // Define libraryUrl
   const libraryUrl = `http://localhost:3002/api/users/${userId}/library`;
 
   useEffect(() => {
-    fetch(`http://localhost:3002/api/books/user/${userId}`)
+    fetch(`http://localhost:3002/api/books/user/${userId}/status`)
       .then(response => {
         if (!response.ok) {
-          throw new Error(`Erro HTTP! Status: ${response.status}`);
+          throw new Error(`HTTP Error! Status: ${response.status}`);
         }
         return response.json();
       })
       .then(data => {
-        const publicBooks = data.filter(book => book.visibility === 'Publico');
-        setBooks(publicBooks);
+        setBooks(data); // Armazena todos os livros no estado
       })
-      .catch(error => console.error('Erro ao buscar os livros:', error));
+      .catch(error => console.error('Error fetching books:', error));
   }, [userId]);
 
   const handleFilterChange = (event) => {
@@ -88,10 +87,15 @@ function Home() {
   };
 
   const handleAddBookClick = () => {
-    navigate('/pages/AddBook'); 
+    navigate('/pages/AddBook');
   };
+
   const handleOpenProfile = () => {
-    navigate('/Profile'); 
+    navigate('/Profile');
+  };
+
+  const handleOpenCommunity = () => {
+    navigate('/Community');
   };
 
   const handleShareLibraryClick = () => {
@@ -101,36 +105,33 @@ function Home() {
   const handleShareModalClose = () => {
     setShareModalOpen(false);
   };
-// Filtragem dos livros
-const filteredBooks = books.filter(book => {
-  // Normalizar valores para comparação
-  const normalizedStatus = book.status ? book.status.toLowerCase() : '';
-  const normalizedVisibility = book.visibility ? book.visibility.toLowerCase() : '';
 
-  console.log(`Filtrando livro: ${book.title}, Status: ${normalizedStatus}, Visibilidade: ${normalizedVisibility}`);
+  // Filtragem dos livros
+  const filteredBooks = books.filter(book => {
+    // Normalizar valores para comparação
+    const normalizedStatus = book.status ? book.status.toLowerCase() : '';
+    const normalizedVisibility = book.visibility ? book.visibility.toLowerCase() : '';
 
-  switch (filter) {
-    case 'allbooks':
-      return true; // Mostrar todos os livros
+    switch (filter) {
+      case 'allbooks':
+        return true; // Mostrar todos os livros
 
-    case 'lidos':
-      return normalizedStatus === 'lido'; // Mostrar livros lidos
+      case 'lidos':
+        return normalizedStatus === 'lido'; // Mostrar livros lidos
 
-    case 'naolidos':
-      return normalizedStatus === 'não lido'; // Mostrar livros não lidos
+      case 'naolidos':
+        return normalizedStatus === 'não lido'; // Mostrar livros não lidos
 
-    case 'emprestados':
-      return normalizedStatus === 'emprestado'; // Mostrar livros emprestados
+      case 'emprestados':
+        return book.loan !== null && book.loan !== ''; // Mostrar livros emprestados, assumindo que `loan` indica empréstimo
 
-    case 'privados':
-      return normalizedVisibility === 'privado'; // Mostrar livros privados
+      case 'privados':
+        return normalizedVisibility === 'privado'; // Mostrar livros privados
 
-    default:
-      return false; // Filtros desconhecidos
-  }
-});
-
-
+      default:
+        return false; // Filtros desconhecidos
+    }
+  });
 
   return (
     <div className="home-container">
@@ -170,7 +171,7 @@ const filteredBooks = books.filter(book => {
         onClose={handleMenuClose}
       >
         <MenuItem onClick={handleOpenProfile}>Perfil</MenuItem>
-        <MenuItem onClick={handleMenuClose}>Comunidades</MenuItem>
+        <MenuItem onClick={handleOpenCommunity}>Comunidades</MenuItem>
         <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
       </Menu>
       <main className="main-content">
@@ -236,9 +237,9 @@ const filteredBooks = books.filter(book => {
               ) : (
                 filteredBooks.map((book) => (
                   <ImageListItem
-                    key={book.id}
+                    key={book.bookId} // Atualize para book.bookId
                     sx={{
-                      width: 'calc(20% - 20px)', // Adjust item width
+                      width: 'calc(20% - 20px)', // Ajusta a largura do item
                       borderRadius: '10px',
                       marginTop: '3rem',
                       overflow: 'hidden',
@@ -296,6 +297,9 @@ const filteredBooks = books.filter(book => {
         status={selectedBook ? selectedBook.status : ''}
         visibility={selectedBook ? selectedBook.visibility : ''}
         imageUrl={selectedBook ? selectedBook.imageUrl : ''}
+        bookId={selectedBook ? selectedBook.bookId : ''} // Atualize para selectedBook.bookId
+        loan={selectedBook ? selectedBook.loan : null}
+        requestId={selectedBook ? selectedBook.requestId : ''}
       />
       <ModalEdit
         show={modalState.open && modalState.type === 'edit'}
@@ -326,7 +330,11 @@ const filteredBooks = books.filter(book => {
         status={selectedBook ? selectedBook.status : ''}
         visibility={selectedBook ? selectedBook.visibility : ''}
         imageUrl={selectedBook ? selectedBook.imageUrl : ''}
+        ownerId={userId}  // Certifique-se de que userId está definido
+        requesterId={null}  // Atualize conforme necessário
+        bookId={selectedBook ? selectedBook.bookId : ''}// Certifique-se de que selectedBook.id é válido
       />
+
       <ModalShare
         show={shareModalOpen}
         handleClose={handleShareModalClose}

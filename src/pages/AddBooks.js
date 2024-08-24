@@ -57,7 +57,6 @@ const StyledRating = styled(Rating)({
 });
 
 function AddBook() {
-  const [bookId, setBookId] = useState("");
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [isbn, setIsbn] = useState("");
@@ -65,12 +64,11 @@ function AddBook() {
   const [genre, setGenre] = useState("");
   const [status, setStatus] = useState(false);
   const [rating, setRating] = useState(2);
-  const [ownerId, setOwnerId] = useState("12345");
+  const [ownerId, setOwnerId] = useState("user456");
   const [visibility, setVisibility] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
   const [description, setDescription] = useState("");
   const [publisher, setPublisher] = useState("");
-
   const [openModal, setOpenModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [modalData, setModalData] = useState({});
@@ -101,87 +99,79 @@ function AddBook() {
       setImageUrl(bookData.imageLinks ? bookData.imageLinks.thumbnail : "");
       setPublisher(bookData.publisher || "");
       setDescription(bookData.description || "");
-      setBookId(response.data.items[0].id || generateUniqueId());
+    
     } catch (error) {
       console.error("Erro ao buscar detalhes do livro:", error);
     }
   };
 
-  const generateUniqueId = () => {
-    return Math.random().toString(36).substr(2, 10);
-  };
-
   const handleIsbnChange = (e) => {
     const isbnValue = e.target.value;
     setIsbn(isbnValue);
-
     if (isbnValue.length === 13) {
-      fetchBookDetails(isbnValue);
+        fetchBookDetails(isbnValue);
     }
-  };
+};
 
-  const handleStatusChange = (event) => {
+const handleStatusChange = (event) => {
     setStatus(event.target.checked);
-  };
+};
 
-  const handleVisibilityChange = (event) => {
+const handleVisibilityChange = (event) => {
     setVisibility(event.target.checked);
-  };
+};
 
-  const handleRatingChange = (event, newValue) => {
+const handleRatingChange = (event, newValue) => {
     setRating(newValue);
-  };
+};
 
-  const handleSubmit = (e) => {
+const handleSubmit = (e) => {
     e.preventDefault();
     setModalData({
-      title,
-      author,
-      isbn,
-      publisher,
-      publishDate,
-      genre,
-      description,
-      status,
-      rating,
-      visibility,
-      imageUrl
+        title,
+        author,
+        isbn,
+        publisher,
+        publishDate,
+        genre,
+        description,
+        status,
+        rating,
+        visibility,
+        imageUrl,
     });
     setOpenModal(true);
-  };
+};
 
-  const handleConfirmSave = async () => {
+const handleConfirmSave = async () => {
     const newBook = {
-      book_id: bookId,
-      title,
-      author,
-      isbn,
-      publisher,
-      publish_date: publishDate,
-      genre,
-      description,
-      status: status ? "Lido" : "Não lido",
-      rating,
-      owner_id: ownerId,
-      visibility: visibility ? "Publico" : "Privado",
-      image_url: imageUrl,
+        title,
+        author,
+        isbn,
+        publisher,
+        publish_date: publishDate,
+        genre,
+        description,
+        status: status ? "Lido" : "Não lido",
+        rating,
+        owner_id: ownerId,
+        visibility: visibility ? "Publico" : "Privado",
+        image_url: imageUrl,
     };
 
     try {
-      console.log(newBook)
-      await axios.post('http://localhost:3002/api/books/book', newBook);
-      setSuccessMessage("Livro cadastrado com sucesso!");
-      clearForm();
+        await axios.post('http://localhost:3002/api/books/book', newBook);
+        setSuccessMessage("Livro cadastrado com sucesso!");
+        clearForm();
     } catch (error) {
-      console.error("Erro ao cadastrar o livro:", error);
-      setSuccessMessage("Erro ao cadastrar o livro, tente novamente.");
+        console.error("Erro ao cadastrar o livro:", error);
+        setSuccessMessage("Erro ao cadastrar o livro, tente novamente.");
     } finally {
-      setOpenModal(false);
+        setOpenModal(false);
     }
-  };
+};
 
-  const clearForm = () => {
-    setBookId("");
+const clearForm = () => {
     setTitle("");
     setAuthor("");
     setIsbn("");
@@ -189,12 +179,12 @@ function AddBook() {
     setGenre("");
     setStatus(false);
     setRating(2);
-    setOwnerId("12345");
+    setOwnerId("user456");
     setVisibility(false);
     setImageUrl("");
     setDescription("");
     setPublisher("");
-  };
+};
 
   return (
     <div className="add-book-container">
@@ -202,7 +192,7 @@ function AddBook() {
       <Container maxWidth="xl">
         <Grid container spacing={4}>
           <Grid item xs={12} md={3}>
-            <Menu />
+            {/* <Menu /> */}
           </Grid>
           <Grid item xs={12} md={6}>
             <div className="form-container">

@@ -1,80 +1,10 @@
-/* Estilo do botão para abrir o menu */
-.menu-toggle-button {
-  position: fixed;
-  top: 31px;
-  left: 10px;
-  background-color: var(--yellow-burnt);
-  color: var(--purple);
-  border: none;
-  padding: 10px 15px;
-  font-size: 18px;
-  cursor: pointer;
-  z-index: 1000; /* Fica acima de tudo */
-  border-radius: 5px;
+/* Adiciona um espaço inferior ao AppBar para garantir que o conteúdo não fique atrás */
+.MuiAppBar-root {
+  margin-bottom: 20px; /* Ajuste o valor conforme necessário */
 }
 
-/* Contêiner do menu lateral */
-.menu-container {
-  position: fixed;
-  top: 0;
-  left: -250px; /* Esconde o menu fora da tela */
-  width: 250px;
-  height: 100%;
-  background-color: var(--purple);
-  padding: 60px 20px; /* Espaço para o conteúdo */
-  transition: left 0.3s ease;
-  z-index: 999;
-}
-
-/* Estilo para o menu aberto */
-.menu-container.open {
-  left: 0;
-}
-
-/* Lista de itens no menu */
-.menu-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.menu-item {
-  margin: 15px 0;
-}
-
-.menu-item a {
-  color: #fff;
-  text-decoration: none;
-  font-size: 18px;
-}
-
-.menu-item a:hover {
-  text-decoration: underline;
-}
-
-/* Overlay para clicar e fechar o menu */
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 998; /* Fica abaixo do menu, mas acima do conteúdo */
-}
-
-/* Barra decorativa no lado direito */
-.decorative-bar {
-  position: fixed;
-  right: 0;
-  top: 0;
-  width: 60px; /* Largura da barra */
-  height: 100vh; /* Altura total da tela */
-  background-color: var(--purple); /* Cor roxa igual à do menu */
-  z-index: 1; /* Garantir que a barra esteja atrás dos outros elementos */
-}
-
-/* Adicionar padding para evitar que o conteúdo fique sob a barra */
-.content-with-bar {
-  padding-right: 70px; /* Espaço adicional para acomodar a barra */
+/* Adiciona um espaçamento superior para a div community-container */
+.community-container {
+  margin-top: 20px; /* Ajuste o valor conforme necessário */
+  padding: 20px; /* Adiciona um padding interno se necessário */
 }
